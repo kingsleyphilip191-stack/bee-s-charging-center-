@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bee's Charging Center | Login</title>
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--yellow:#FFD700; --black:#000; --dark:#1a1a1a; --gray:#f5f5f5;}
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;scroll-behavior:smooth;}
+  body{background:var(--gray);}
+  
+  /* LOGIN SCREEN */
+  #loginScreen{display:flex;justify-content:center;align-items:center;min-height:100vh;background:linear-gradient(135deg,#000,#FFD700);}
+  .login-box{background:#fff;padding:40px;border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,0.3);width:90%;max-width:400px;animation:slideUp 0.8s ease;}
+  .login-box h2{text-align:center;color:var(--black);margin-bottom:20px;}
+  .login-box input{width:100%;padding:14px;margin:10px 0;border:2px solid #eee;border-radius:10px;transition:0.3s;}
+  .login-box input:focus{border-color:var(--yellow);outline:none;}
+  .toggle{color:#666;font-size:14px;text-align:center;margin-top:15px;cursor:pointer;}
+  .toggle span{color:var(--black);font-weight:600;}
+  
+  /* MAIN SITE */
+  #mainSite{display:none;}
+  header{background:linear-gradient(90deg,var(--black),var(--dark));color:var(--yellow);padding:15px 20px;position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;}
+  header h1{font-size:22px;}
+  nav a{color:var(--yellow);margin:0 10px;text-decoration:none;font-weight:600;}
+  .logout-btn{background:var(--yellow);color:var(--black);border:none;padding:8px 15px;border-radius:8px;cursor:pointer;font-weight:600;}
+  
+  .hero{background:url('images/IMG_9527.jpg') center/cover; color:#fff; text-align:center; padding:120px 20px;}
+  .hero h2{font-size:42px;text-shadow:2px 2px 8px #000;}
+  .btn{background:var(--yellow);color:var(--black);padding:14px 28px;border:none;border-radius:10px;font-weight:700;cursor:pointer;transition:0.3s;box-shadow:0 4px 15px rgba(255,215,0,0.4);}
+  .btn:hover{transform:translateY(-3px);background:#fff;}
+  
+  .container{max-width:1200px;margin:auto;padding:60px 20px;}
+  h2.section-title{text-align:center;font-size:34px;margin-bottom:40px;color:var(--black);}
+  
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px;}
+  .card{background:#fff;border-radius:18px;box-shadow:0 5px 20px rgba(0,0,0,0.08);overflow:hidden;transition:0.4s;animation:fadeIn 0.6s ease;}
+  .card:hover{transform:translateY(-12px);box-shadow:0 15px 35px rgba(0,0,0,0.15);}
+  .card img{width:100%;height:230px;object-fit:cover;}
+  .card-body{padding:20px;text-align:center;}
+  .price{color:#e63946;font-size:22px;font-weight:700;}
+  .badge{background:var(--yellow);color:var(--black);padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;}
+  
+  #cart{background:#fff;padding:35px;border-radius:18px;box-shadow:0 5px 20px rgba(0,0,0,0.08);}
+  input,textarea,select{width:100%;padding:14px;margin:10px 0;border:2px solid #eee;border-radius:10px;}
+  
+  footer{background:var(--black);color:var(--yellow);text-align:center;padding:30px;}
+  .whatsapp{position:fixed;bottom:20px;right:20px;background:#25D366;color:#fff;padding:16px;border-radius:50%;font-size:26px;text-decoration:none;box-shadow:0 4px 15px rgba(0,0,0,0.3);animation:bounce 2s infinite;}
+  
+  @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  @media(max-width:768px){.hero h2{font-size:30px;} nav{display:none;}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <h2>🐝 Welcome to Bee's</h2>
+    <div id="loginForm">
+      <input type="email" id="loginEmail" placeholder="Email Address" required>
+      <input type="password" id="loginPass" placeholder="Password" required>
+      <button class="btn" style="width:100%;" onclick="login()">Login</button>
+      <p class="toggle">Don't have an account? <span onclick="showSignup()">Sign Up</span></p>
+    </div>
+    <div id="signupForm" style="display:none;">
+      <input type="text" id="signName" placeholder="Full Name" required>
+      <input type="email" id="signEmail" placeholder="Email Address" required>
+      <input type="tel" id="signPhone" placeholder="Phone Number" required>
+      <input type="password" id="signPass" placeholder="Create Password" required>
+      <button class="btn" style="width:100%;" onclick="signup()">Create Account</button>
+      <p class="toggle">Already have an account? <span onclick="showLogin()">Login</span></p>
+    </div>
+  </div>
+</div>
+
+
+<!-- MAIN WEBSITE -->
+<div id="mainSite">
+<header>
+  <h1>🐝 Bee's Charging Center</h1>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#shop">Shop</a>
+    <a href="#book">Book</a>
+    <a href="#cart">Cart (<span id="cartCount">0</span>)</a>
+  </nav>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</header>
+
+<section class="hero" id="home">
+  <h2>Power Up. Stay Connected.</h2>
+  <p>Original Accessories • Fast Charging • Make Payment Online</p>
+  <br>
+
+  <a href="#shop" class="btn">Start Shopping</a>
+</section>
+
+<div class="container" id="shop">
+  <h2 class="section-title">Shop Our Best Sellers</h2>
+  <div class="grid">
+    <div class="card">
+      <img src="images/Accessories 3.jpeg" alt="Charger">
+      <div class="card-body">
+        <span class="badge">Best Seller</span>
+        <h3>Fast Charger 33W</h3>
+        <p class="price">₦6,500</p>
+        <button class="btn" onclick="addToCart('Fast Charger 33W',6500)">Add to Cart</button>
+        <button class="btn" style="background:#333;color:#FFD700" onclick="addToCart('Fast Charger 33W - GIFT',6500,true)">Send as Gift</button>
+      </div>
+    </div>
+    <div class="card">
+      <img src="images/Accessories 1.jpeg" alt="Power Bank">
+      <div class="card-body">
+        <span class="badge">New</span>
+        <h3>Power Bank 20000mAh</h3>
+        <p class="price">₦15,000</p>
+        <button class="btn" onclick="addToCart('Power Bank 20000mAh',15000)">Add to Cart</button>
+        <button class="btn" style="background:#333;color:#FFD700" onclick="addToCart('Power Bank 20000mAh - GIFT',15000,true)">Send as Gift</button>
+      </div>
+    </div>
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?q=80&w=800" alt="Earphones">
+      <div class="card-body">
+        <span class="badge">Hot</span>
+        <h3>Wireless Earphones</h3>
+        <p class="price">₦12,000</p>
+        <button class="btn" onclick="addToCart('Wireless Earphones',12000)">Add to Cart</button>
+        <button class="btn" style="background:#333;color:#FFD700" onclick="addToCart('Wireless Earphones - GIFT',12000,true)">Send as Gift</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container" id="book">
+  <h2 class="section-title">Book a Service</h2>
+  <form onsubmit="bookService(event)">
+    <input type="text" id="bName" placeholder="Your Name" required>
+    <input type="tel" id="bPhone" placeholder="Your Phone" required>
+    <select id="bService" required>
+      <option value="">Select Service</option>
+      <option>Phone Charging</option>
+      <option>Screen Protector Installation</option>
+      <option>Phone Repair</option>
+    </select>
+    <input type="datetime-local" id="bDate" required>
+    <button class="btn" type="submit" style="width:100%;">Book Appointment</button>
+  </form>
+</div>
+
+<div class="container" id="cart">
+  <h2 class="section-title">Checkout</h2>
+  <div id="cartItems"><p>Your cart is empty</p></div>
+  <h3>Total: ₦<span id="total">0</span></h3>
+  
+  <h4>Delivery Details</h4>
+  <input type="text" id="custName" placeholder="Full Name" required>
+  <input type="email" id="custEmail" placeholder="Email Address" required>
+  <input type="tel" id="custPhone" placeholder="Phone Number" required>
+  <textarea id="address" placeholder="Delivery Address" rows="2"></textarea>
+  
+  <div id="giftBox" style="display:none;">
+    <h4>Gift Recipient Details</h4>
+    <input type="text" id="friendName" placeholder="Friend's Name">
+    <input type="tel" id="friendPhone" placeholder="Friend's Phone">
+  </div>
+  
+  <button class="btn" style="width:100%;margin-top:15px;font-size:18px;" onclick="payWithPaystack()">Make Payment</button>
+</div>
+
+<footer id="contact">
+  <p>📍 28 Idak Edat street, Nwaniba Uyo, Akwa Ibom State</p>
+  <p>📞 09150556209 | ✉️ kingsleyphilip191@gmail.com</p>
+  <p>©️ 2026 Bee's Charging Center</p>
+</footer>
+
+<a href="https://wa.me/2349150556209" class="whatsapp" target="_blank">💬</a>
+</div>
+
+<script>
+  // LOGIN SYSTEM - Uses browser storage
+  function showSignup(){document.getElementById('loginForm').style.display='none';document.getElementById('signupForm').style.display='block';}
+  function showLogin(){document.getElementById('signupForm').style.display='none';document.getElementById('loginForm').style.display='block';}
+  
+  function signup(){
+    let user = {name:signName.value, email:signEmail.value, phone:signPhone.value, pass:signPass.value};
+    if(!user.name || !user.email) return alert('Fill all fields');
+    localStorage.setItem('beeUser', JSON.stringify(user));
+    alert('Account Created! Please login.');
+    showLogin();
+  }
+  
+  function login(){
+    let user = JSON.parse(localStorage.getItem('beeUser'));
+    if(user && user.email === loginEmail.value && user.pass === loginPass.value){
+      document.getElementById('loginScreen').style.display='none';
+      document.getElementById('mainSite').style.display='block';
+      custName.value = user.name; custEmail.value = user.email; custPhone.value = user.phone;
+    }else{alert('Invalid email or password');}
+  }
+  
+  function logout(){
+    document.getElementById('loginScreen').style.display='flex';
+    document.getElementById('mainSite').style.display='none';
+  }
+
+  // CART + PAYMENT
+  let cart = []; let total = 0; let isGift = false;
+  function addToCart(name, price, gift=false){
+    cart.push({name, price}); total += price; if(gift) isGift = true; updateCart();
+  }
+  function updateCart(){
+    let cartDiv = document.getElementById('cartItems');
+    cartDiv.innerHTML = '';
+    cart.forEach(item=>{
+      cartDiv.innerHTML += `<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee;">${item.name} <span>₦${item.price.toLocaleString()}</span></div>`;
+    });
+    document.getElementById('total').innerText = total.toLocaleString();
+    document.getElementById('cartCount').innerText = cart.length;
+    document.getElementById('giftBox').style.display = isGift ? 'block' : 'none';
+    if(cart.length === 0) cartDiv.innerHTML = '<p>Your cart is empty</p>';
+  }
+  function bookService(e){
+    e.preventDefault();
+    let msg = `New Booking:%0AName: ${bName.value}%0APhone: ${bPhone.value}%0AService: ${bService.value}%0ADate: ${bDate.value}`;
+    window.open(`https://wa.me/2349150556209?text=${msg}`);
+  }
+  function payWithPaystack(){
+    if(cart.length === 0){alert('Cart is empty'); return;}
+    let handler = PaystackPop.setup({
+      key: 'pk_live_0790dc5fbfbff8e46fa8193e460af1634d765d73', // <-- Replace with your Paystack Public Key
+      email: custEmail.value, amount: total * 100, currency: "NGN", ref: 'BEE_'+Date.now(),
+      metadata: {custom_fields: [
+        {display_name: "Customer", variable_name: "customer", value: custName.value},
+        {display_name: "Items", variable_name: "items", value: JSON.stringify(cart)},
+        {display_name: "Gift To", variable_name: "gift", value: isGift ? friendName.value : 'No'}
+      ]},
+      callback: function(response){
+        alert('Payment Successful! Ref: '+response.reference);
+        window.location.href = "https://wa.me/2349150556209?text=Payment%20Successful.%20Ref:%20"+response.reference;
+      },
+      onClose: function(){ alert('Payment cancelled'); }
+    });
+    handler.openIframe();
+  }
+</script>
+
+</body>
+</html>
