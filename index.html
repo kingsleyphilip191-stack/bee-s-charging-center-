@@ -22,12 +22,16 @@
   
   /* MAIN SITE */
   #mainSite{display:none;}
-  header{background:linear-gradient(135deg,var(--black),var(--dark));color:var(--yellow);padding:20px;text-align:center;position:sticky;top:0;z-index:100;}
-  header h1{font-size:28px;font-weight:700;}
-  nav a{color:var(--yellow);margin:0 12px;text-decoration:none;font-weight:600;}
-  nav a:hover{border-bottom:2px solid var(--yellow);}
+  header{background:linear-gradient(90deg,var(--black),var(--dark));color:var(--yellow);padding:15px 20px;position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;}
+  header h1{font-size:22px;}
+  
+  nav{display:flex;gap:15px;align-items:center;}
+  nav a{color:var(--yellow);text-decoration:none;font-weight:600;}
   .logout-btn{background:var(--yellow);color:var(--black);border:none;padding:8px 15px;border-radius:8px;cursor:pointer;font-weight:600;}
   
+  /* HAMBURGER MENU */
+  .menu-toggle{display:none;font-size:28px;background:none;border:none;color:var(--yellow);cursor:pointer;}
+
   .hero{background:url('images/IMG_9527.jpg') center/cover; color:#fff; text-align:center; padding:120px 20px;}
   .hero h2{font-size:42px;text-shadow:2px 2px 8px #000;}
   .btn{background:var(--yellow);color:var(--black);padding:14px 28px;border:none;border-radius:10px;font-weight:700;cursor:pointer;transition:0.3s;box-shadow:0 4px 15px rgba(255,215,0,0.4);}
@@ -53,7 +57,22 @@
   @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
   @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-  @media(max-width:768px){.hero h2{font-size:30px;} }
+  
+  /* MOBILE RESPONSIVE */
+  @media(max-width:768px){
+    nav{
+      display:none;
+      flex-direction:column;
+      width:100%;
+      background:var(--dark);
+      padding:15px 0;
+      margin-top:10px;
+      border-radius:10px;
+    }
+    nav.show{display:flex;} 
+    .menu-toggle{display:block;}
+    .hero h2{font-size:30px;}
+  }
 </style>
 </head>
 <body>
@@ -79,16 +98,16 @@
   </div>
 </div>
 
-
 <!-- MAIN WEBSITE -->
 <div id="mainSite">
 <header>
   <h1>🐝 Bee's Charging Center</h1>
-  <nav>
-    <a href="#home">Home</a>
-    <a href="#shop">Shop</a>
-    <a href="#book">Book</a>
-    <a href="#cart">Cart (<span id="cartCount">0</span>)</a>
+  <button class="menu-toggle" onclick="toggleMenu()">☰</button> <!-- Hamburger -->
+  <nav id="navbar">
+    <a href="#home" onclick="toggleMenu()">Home</a>
+    <a href="#shop" onclick="toggleMenu()">Shop</a>
+    <a href="#book" onclick="toggleMenu()">Book</a>
+    <a href="#cart" onclick="toggleMenu()">Cart (<span id="cartCount">0</span>)</a>
   </nav>
   <button class="logout-btn" onclick="logout()">Logout</button>
 </header>
@@ -97,9 +116,9 @@
   <h2>Power Up. Stay Connected.</h2>
   <p>Original Accessories • Fast Charging • Make Payment Online</p>
   <br>
-
   <a href="#shop" class="btn">Start Shopping</a>
 </section>
+
 
 <div class="container" id="shop">
   <h2 class="section-title">Shop Our Best Sellers</h2>
@@ -183,6 +202,11 @@
 </div>
 
 <script>
+  // TOGGLE MOBILE MENU
+  function toggleMenu(){
+    document.getElementById('navbar').classList.toggle('show');
+  }
+
   // LOGIN SYSTEM - Uses browser storage
   function showSignup(){document.getElementById('loginForm').style.display='none';document.getElementById('signupForm').style.display='block';}
   function showLogin(){document.getElementById('signupForm').style.display='none';document.getElementById('loginForm').style.display='block';}
