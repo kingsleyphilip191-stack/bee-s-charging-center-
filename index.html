@@ -1,403 +1,778 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bee's Gadget Hub | Power Up. Stay Connected.</title>
-<script src="https://js.paystack.co/v1/inline.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{--yellow:#FFD700; --black:#000; --dark:#1a1a1a; --gray:#f5f5f5;}
-  *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;scroll-behavior:smooth;}
-  body{background:var(--gray);}
-  
-  /* LOGIN SCREEN */
-  #loginScreen{display:flex;justify-content:center;align-items:center;min-height:100vh;background:linear-gradient(135deg,#000,#FFD700);}
-  .login-box{background:#fff;padding:40px;border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,0.3);width:90%;max-width:400px;animation:slideUp 0.8s ease;}
-  .login-box h2{text-align:center;color:var(--black);margin-bottom:20px;}
-  .login-box input{width:100%;padding:14px;margin:10px 0;border:2px solid #eee;border-radius:10px;transition:0.3s;}
-  .login-box input:focus{border-color:var(--yellow);outline:none;}
-  .toggle{color:#666;font-size:14px;text-align:center;margin-top:15px;cursor:pointer;}
-  .toggle span{color:var(--black);font-weight:600;}
-  
-  /* MAIN SITE */
-  #mainSite{display:none;}
-  header{background:linear-gradient(90deg,var(--black),var(--dark));color:var(--yellow);padding:15px 20px;position:sticky;top:0;z-index:100;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;}
-  header h1{font-size:22px;}
-  
-  nav{display:flex;gap:15px;align-items:center;}
-  nav a{color:var(--yellow);text-decoration:none;font-weight:600;}
-  .logout-btn{background:var(--yellow);color:var(--black);border:none;padding:8px 15px;border-radius:8px;cursor:pointer;font-weight:600;}
-  
-  /* HAMBURGER MENU */
-  .menu-toggle{display:none;font-size:28px;background:none;border:none;color:var(--yellow);cursor:pointer;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bee's Gadget Hub | Power Up. Stay Connected.</title>
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js');
+    }
 
-  /* HERO WITH PHONE ACCESSORIES BG */
-  .hero{background:linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('images/image3.PNG') center/cover no-repeat; color:#fff; text-align:center; padding:140px 20px; position:relative;}
-  .hero h2{font-size:48px;text-shadow:2px 2px 8px #000; margin-bottom:10px;}
-  .hero p{font-size:18px;margin-bottom:20px;}
-  .hero span{color:var(--yellow);}
-  .btn{background:var(--yellow);color:var(--black);padding:14px 28px;border:none;border-radius:10px;font-weight:700;cursor:pointer;transition:0.3s;box-shadow:0 4px 15px rgba(255,215,0,0.4);text-decoration:none;display:inline-block;}
-  .btn:hover{transform:translateY(-3px);background:#fff;}
-  
-  .container{max-width:1200px;margin:auto;padding:60px 20px;}
-  h2.section-title{text-align:center;font-size:34px;margin-bottom:40px;color:var(--black);}
-  
-  /* ABOUT SECTION */
-  .about{display:flex;gap:40px;align-items:center;flex-wrap:wrap;}
-  .about-img{flex:1;min-width:300px;}
-  .about-img img{width:100%;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.2);}
-  .about-text{flex:2;min-width:300px;}
-  .about-text h3{font-size:28px;color:var(--black);margin-bottom:10px;}
-  .about-text .ceo-title{color:#666;font-weight:600;margin-bottom:15px;}
-  .about-text p{line-height:1.8;color:#444;}
+  </script>
+  <style>
+    :root {
+      --yellow: #FFD700;
+      --black: #000;
+      --dark: #1a1a1a;
+      --gray: #f5f5f5;
+    }
 
-  /* FEATURES SECTION */
-  .features{background:#fff;padding:60px 20px;}
-  .feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:30px;}
-  .feature{text-align:center;padding:30px;border-radius:15px;transition:0.3s;}
-  .feature:hover{background:var(--gray);transform:translateY(-5px);}
-  .feature-icon{font-size:40px;margin-bottom:15px;}
-  .feature h4{font-size:20px;margin-bottom:10px;}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      scroll-behavior: smooth;
+    }
 
-  /* VIDEO SECTION */
-  .video-section{background:var(--black);color:#fff;text-align:center;padding:60px 20px;}
-  .video-wrapper{max-width:800px;margin:auto;border-radius:20px;overflow:hidden;box-shadow:0 10px 40px rgba(255,215,0,0.3);}
-  .video-wrapper iframe{width:100%;height:450px;border:none;}
+    body {
+      background: var(--gray);
+    }
 
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px;}
-  .card{background:#fff;border-radius:18px;box-shadow:0 5px 20px rgba(0,0,0,0.08);overflow:hidden;transition:0.4s;animation:fadeIn 0.6s ease;}
-  .card:hover{transform:translateY(-12px);box-shadow:0 15px 35px rgba(0,0,0,0.15);}
-  .card img{width:100%;height:230px;object-fit:cover;}
-  .card-body{padding:20px;text-align:center;}
-  .price{color:#e63946;font-size:22px;font-weight:700;}
-  .badge{background:var(--yellow);color:var(--black);padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;}
+    /* LOGIN SCREEN */
+    #loginScreen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #000, #FFD700);
+    }
 
-  /* TESTIMONIALS */
-  .testimonial{background:#fff;padding:25px;border-radius:15px;box-shadow:0 5px 20px rgba(0,0,0,0.08);text-align:left;}
-  .testimonial p{font-style:italic;color:#555;}
-  .testimonial h5{margin-top:15px;color:var(--black);}
-  
-  #cart{background:#fff;padding:35px;border-radius:18px;box-shadow:0 5px 20px rgba(0,0,0,0.08);}
-  input,textarea,select{width:100%;padding:14px;margin:10px 0;border:2px solid #eee;border-radius:10px;}
-  
-  footer{background:var(--black);color:var(--yellow);text-align:center;padding:30px;}
-  .whatsapp{position:fixed;bottom:20px;right:20px;background:#25D366;color:#fff;padding:16px;border-radius:50%;font-size:26px;text-decoration:none;box-shadow:0 4px 15px rgba(0,0,0,0.3);animation:bounce 2s infinite;}
-  
-  @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-  @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
-  
-  /* MOBILE RESPONSIVE */
-  @media(max-width:768px){
-    nav{display:none;flex-direction:column;width:100%;background:var(--dark);padding:15px 0;margin-top:10px;border-radius:10px;}
-    nav.show{display:flex;}
-    .menu-toggle{display:block;}
-    .hero h2{font-size:32px;}
-    .video-wrapper iframe{height:250px;}
-    .about{flex-direction:column;}
-  }
-</style>
+    .login-box {
+      background: #fff;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      width: 90%;
+      max-width: 400px;
+      animation: slideUp 0.8s ease;
+    }
+
+    .login-box h2 {
+      text-align: center;
+      color: var(--black);
+      margin-bottom: 20px;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      border: 2px solid #eee;
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+
+    .login-box input:focus {
+      border-color: var(--yellow);
+      outline: none;
+    }
+
+    .toggle {
+      color: #666;
+      font-size: 14px;
+      text-align: center;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+
+    .toggle span {
+      color: var(--black);
+      font-weight: 600;
+    }
+
+    /* MAIN SITE */
+    #mainSite {
+      display: none;
+    }
+
+    header {
+      background: linear-gradient(90deg, var(--black), var(--dark));
+      color: var(--yellow);
+      padding: 15px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    header h1 {
+      font-size: 22px;
+    }
+
+    nav {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+
+    nav a {
+      color: var(--yellow);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .logout-btn {
+      background: var(--yellow);
+      color: var(--black);
+      border: none;
+      padding: 8px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    /* HAMBURGER MENU */
+    .menu-toggle {
+      display: none;
+      font-size: 28px;
+      background: none;
+      border: none;
+      color: var(--yellow);
+      cursor: pointer;
+    }
+
+    /* HERO WITH PHONE ACCESSORIES BG */
+    .hero {
+      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('images/image3.PNG') center/cover no-repeat;
+      color: #fff;
+      text-align: center;
+      padding: 140px 20px;
+      position: relative;
+    }
+
+    .hero h2 {
+      font-size: 48px;
+      text-shadow: 2px 2px 8px #000;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    .hero span {
+      color: var(--yellow);
+    }
+
+    .btn {
+      background: var(--yellow);
+      color: var(--black);
+      padding: 14px 28px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      background: #fff;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 60px 20px;
+    }
+
+    h2.section-title {
+      text-align: center;
+      font-size: 34px;
+      margin-bottom: 40px;
+      color: var(--black);
+    }
+
+    /* ABOUT SECTION */
+    .about {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .about-img {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .about-img img {
+      width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .about-text {
+      flex: 2;
+      min-width: 300px;
+    }
+
+    .about-text h3 {
+      font-size: 28px;
+      color: var(--black);
+      margin-bottom: 10px;
+    }
+
+    .about-text .ceo-title {
+      color: #666;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .about-text p {
+      line-height: 1.8;
+      color: #444;
+    }
+
+    /* FEATURES SECTION */
+    .features {
+      background: #fff;
+      padding: 60px 20px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+    }
+
+    .feature {
+      text-align: center;
+      padding: 30px;
+      border-radius: 15px;
+      transition: 0.3s;
+    }
+
+    .feature:hover {
+      background: var(--gray);
+      transform: translateY(-5px);
+    }
+
+    .feature-icon {
+      font-size: 40px;
+      margin-bottom: 15px;
+    }
+
+    .feature h4 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    /* VIDEO SECTION */
+    .video-section {
+      background: var(--black);
+      color: #fff;
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .video-wrapper {
+      max-width: 800px;
+      margin: auto;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(255, 215, 0, 0.3);
+    }
+
+    .video-wrapper iframe {
+      width: 100%;
+      height: 450px;
+      border: none;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      transition: 0.4s;
+      animation: fadeIn 0.6s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-12px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .card img {
+      width: 100%;
+      height: 230px;
+      object-fit: cover;
+    }
+
+    .card-body {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .price {
+      color: #e63946;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .badge {
+      background: var(--yellow);
+      color: var(--black);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* TESTIMONIALS */
+    .testimonial {
+      background: #fff;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+      text-align: left;
+    }
+
+    .testimonial p {
+      font-style: italic;
+      color: #555;
+    }
+
+    .testimonial h5 {
+      margin-top: 15px;
+      color: var(--black);
+    }
+
+    #cart {
+      background: #fff;
+      padding: 35px;
+      border-radius: 18px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      border: 2px solid #eee;
+      border-radius: 10px;
+    }
+
+    footer {
+      background: var(--black);
+      color: var(--yellow);
+      text-align: center;
+      padding: 30px;
+    }
+
+    .whatsapp {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #25D366;
+      color: #fff;
+      padding: 16px;
+      border-radius: 50%;
+      font-size: 26px;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0
+      }
+
+      to {
+        opacity: 1
+      }
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-10px)
+      }
+    }
+
+    /* MOBILE RESPONSIVE */
+    @media(max-width:768px) {
+      nav {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background: var(--dark);
+        padding: 15px 0;
+        margin-top: 10px;
+        border-radius: 10px;
+      }
+
+      nav.show {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .hero h2 {
+        font-size: 32px;
+      }
+
+      .video-wrapper iframe {
+        height: 250px;
+      }
+
+      .about {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- LOGIN SCREEN -->
-<div id="loginScreen">
-  <div class="login-box">
-    <h2>🐝 Welcome to Bee's</h2>
-    <div id="loginForm">
-      <input type="email" id="loginEmail" placeholder="Email Address" required>
-      <input type="password" id="loginPass" placeholder="Password" required>
-      <button class="btn" style="width:100%;" onclick="login()">Login</button>
-      <p class="toggle">Don't have an account? <span onclick="showSignup()">Sign Up</span></p>
-    </div>
-    <div id="signupForm" style="display:none;">
-      <input type="text" id="signName" placeholder="Full Name" required>
-      <input type="email" id="signEmail" placeholder="Email Address" required>
-      <input type="tel" id="signPhone" placeholder="Phone Number" required>
-      <input type="password" id="signPass" placeholder="Create Password" required>
-      <button class="btn" style="width:100%;" onclick="signup()">Create Account</button>
-      <p class="toggle">Already have an account? <span onclick="showLogin()">Login</span></p>
-    </div>
-  </div>
-</div>
-
-<!-- MAIN WEBSITE -->
-<div id="mainSite">
-<header>
-  <h1>🐝 Bee's Gadget Hub</h1>
-  <button class="menu-toggle" onclick="toggleMenu()">☰</button>
-  <nav id="navbar">
-    <a href="#home" onclick="toggleMenu()">Home</a>
-    <a href="#about" onclick="toggleMenu()">About</a>
-    <a href="#features" onclick="toggleMenu()">Features</a>
-    <a href="#shop" onclick="toggleMenu()">Shop</a>
-    <a href="#video" onclick="toggleMenu()">Video</a>
-    <a href="#book" onclick="toggleMenu()">Book</a>
-    <a href="#cart" onclick="toggleMenu()">Cart (<span id="cartCount">0</span>)</a>
-  </nav>
-  <button class="logout-btn" onclick="logout()">Logout</button>
-</header>
-
-<section class="hero" id="home">
-  <h2>Power Up With <span>Bee's Gadget Hub</span></h2>
-  <p>Original Phone Accessories • Fast Charging • Stay Connected 24/7</p>
-  <br>
-  <a href="#shop" class="btn">Shop Now</a>
-</section>
-
-<!-- ABOUT ME SECTION -->
-<section class="container" id="about">
-  <h2 class="section-title">About Me</h2>
-  <div class="about">
-    <div class="about-img">
-      <img src="images/7A7E9E09-3462-4526-9D5D-4F216295294A.PNG" alt="CEO Bee's Charging Center">
-       <img src="images/D8A55F79-E89F-4E55-AFBA-78B428D8C5B7.PNG" alt="CEO Bee's Charging Center">
-        <img src="images/A849F226-52C5-4AA8-965A-DD53A86AB48C.PNG" alt="CEO Bee's Charging Center">
-    </div>
-    <div class="about-text">
-      <h3>Beauty Philip</h3>
-      <p class="ceo-title">CEO & Founder - Bee's Gadget Hub</p>
-      <p>Hi, I'm Beauty! I started Bee's Gadget Hub to solve one big problem: "No Light". 
-      We provide fast, safe, and affordable phone charging and original phone accessories to keep you connected anytime, any day.
-      <br><br>
-      With over 5 years experience and 1000+ happy customers, our mission is simple: Power your device, power your hustle. 
-      Thank you for trusting Bee's to keep you online.</p>
-      <a href="#book" class="btn" style="margin-top:15px;">Book a Service</a>
-    </div>
-  </div>
-</section>
-
-<!-- FEATURES SECTION -->
-<section class="features" id="features">
-  <div class="container">
-    <h2 class="section-title">Why Choose Us</h2>
-    <div class="feature-grid">
-      <div class="feature">
-        <div class="feature-icon">⚡</div>
-        <h4>Fast Charging</h4>
-        <p>Get 50% battery in 30 minutes with our 33W fast chargers</p>
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen">
+    <div class="login-box">
+      <h2>🐝 Welcome to Bee's</h2>
+      <div id="loginForm">
+        <input type="email" id="loginEmail" placeholder="Email Address" required>
+        <input type="password" id="loginPass" placeholder="Password" required>
+        <button class="btn" style="width:100%;" onclick="login()">Login</button>
+        <p class="toggle">Don't have an account? <span onclick="showSignup()">Sign Up</span></p>
       </div>
-      <div class="feature">
-        <div class="feature-icon">✅</div>
-        <h4>Original Accessories</h4>
-        <p>Only genuine chargers, cables and power banks. No fake</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🔋</div>
-        <h4>24/7 Power Backup</h4>
-        <p>Generator available. We never run out of light</p>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">💳</div>
-        <h4>Online Payment</h4>
-        <p>Shop and pay online with Paystack. Fast and secure</p>
+      <div id="signupForm" style="display:none;">
+        <input type="text" id="signName" placeholder="Full Name" required>
+        <input type="email" id="signEmail" placeholder="Email Address" required>
+        <input type="tel" id="signPhone" placeholder="Phone Number" required>
+        <input type="password" id="signPass" placeholder="Create Password" required>
+        <button class="btn" style="width:100%;" onclick="signup()">Create Account</button>
+        <p class="toggle">Already have an account? <span onclick="showLogin()">Login</span></p>
       </div>
     </div>
   </div>
-</section>
 
-<!-- SHOP SECTION -->
-<div class="container" id="shop">
-  <h2 class="section-title">Shop Our Best Sellers</h2>
-  <div class="grid">
-    <div class="card">
-      <img src="images/Accessories 3.jpeg" alt="Charger">
-      <div class="card-body">
-        <span class="badge">Best Seller</span>
-        <h3>Fast Charger 33W</h3>
-        <p class="price">₦6,500</p>
-        <button class="btn" onclick="addToCart('Fast Charger 33W',6500)">Add to Cart</button>
-        <button class="btn" style="background:#333;color:#FFD700;margin-top:10px;" onclick="addToCart('Fast Charger 33W - GIFT',6500,true)">Send as Gift</button>
+  <!-- MAIN WEBSITE -->
+  <div id="mainSite">
+    <header>
+      <h1>🐝 Bee's Gadget Hub</h1>
+      <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+      <nav id="navbar">
+        <a href="#home" onclick="toggleMenu()">Home</a>
+        <a href="#about" onclick="toggleMenu()">About</a>
+        <a href="#features" onclick="toggleMenu()">Features</a>
+        <a href="#shop" onclick="toggleMenu()">Shop</a>
+        <a href="#video" onclick="toggleMenu()">Video</a>
+        <a href="#book" onclick="toggleMenu()">Book</a>
+        <a href="#cart" onclick="toggleMenu()">Cart (<span id="cartCount">0</span>)</a>
+      </nav>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </header>
+
+    <section class="hero" id="home">
+      <h2>Power Up With <span>Bee's Gadget Hub</span></h2>
+      <p>Original Phone Accessories • Fast Charging • Stay Connected 24/7</p>
+      <br>
+      <a href="#shop" class="btn">Shop Now</a>
+    </section>
+
+    <!-- ABOUT ME SECTION -->
+    <section class="container" id="about">
+      <h2 class="section-title">About Me</h2>
+      <div class="about">
+        <div class="about-img">
+          <img src="images/7A7E9E09-3462-4526-9D5D-4F216295294A.PNG" alt="CEO Bee's Charging Center">
+          <img src="images/D8A55F79-E89F-4E55-AFBA-78B428D8C5B7.PNG" alt="CEO Bee's Charging Center">
+          <img src="images/A849F226-52C5-4AA8-965A-DD53A86AB48C.PNG" alt="CEO Bee's Charging Center">
+        </div>
+        <div class="about-text">
+          <h3>Beauty Philip</h3>
+          <p class="ceo-title">CEO & Founder - Bee's Gadget Hub</p>
+          <p>Hi, I'm Beauty! I started Bee's Gadget Hub to solve one big problem: "No Light".
+            We provide fast, safe, and affordable phone charging and original phone accessories to keep you connected
+            anytime, any day.
+            <br><br>
+            With over 5 years experience and 1000+ happy customers, our mission is simple: Power your device, power your
+            hustle.
+            Thank you for trusting Bee's to keep you online.
+          </p>
+          <a href="#book" class="btn" style="margin-top:15px;">Book a Service</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section class="features" id="features">
+      <div class="container">
+        <h2 class="section-title">Why Choose Us</h2>
+        <div class="feature-grid">
+          <div class="feature">
+            <div class="feature-icon">⚡</div>
+            <h4>Fast Charging</h4>
+            <p>Get 50% battery in 30 minutes with our 33W fast chargers</p>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">✅</div>
+            <h4>Original Accessories</h4>
+            <p>Only genuine chargers, cables and power banks. No fake</p>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">🔋</div>
+            <h4>24/7 Power Backup</h4>
+            <p>Generator available. We never run out of light</p>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">💳</div>
+            <h4>Online Payment</h4>
+            <p>Shop and pay online with Paystack. Fast and secure</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHOP SECTION -->
+    <div class="container" id="shop">
+      <h2 class="section-title">Shop Our Best Sellers</h2>
+      <div class="grid">
+        <div class="card">
+          <img src="images/Accessories 3.jpeg" alt="Charger">
+          <div class="card-body">
+            <span class="badge">Best Seller</span>
+            <h3>Fast Charger 33W</h3>
+            <p class="price">₦6,500</p>
+            <button class="btn" onclick="addToCart('Fast Charger 33W',6500)">Add to Cart</button>
+            <button class="btn" style="background:#333;color:#FFD700;margin-top:10px;"
+              onclick="addToCart('Fast Charger 33W - GIFT',6500,true)">Send as Gift</button>
+          </div>
+        </div>
+        <div class="card">
+          <img src="images/Accessories 1.jpeg" alt="Power Bank">
+          <div class="card-body">
+            <span class="badge">New</span>
+            <h3>Power Bank 20000mAh</h3>
+            <p class="price">₦15,000</p>
+            <button class="btn" onclick="addToCart('Power Bank 20000mAh',15000)">Add to Cart</button>
+            <button class="btn" style="background:#333;color:#FFD700;margin-top:10px;"
+              onclick="addToCart('Power Bank 20000mAh - GIFT',15000,true)">Send as Gift</button>
+          </div>
+        </div>
+        <div class="card">
+          <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?q=80&w=800" alt="Earphones">
+          <div class="card-body">
+            <span class="badge">Hot</span>
+            <h3>Wireless Earphones</h3>
+            <p class="price">₦12,000</p>
+            <button class="btn" onclick="addToCart('Wireless Earphones',12000)">Add to Cart</button>
+            <button class="btn" style="background:#333;color:#FFD700;margin-top:10px;"
+              onclick="addToCart('Wireless Earphones - GIFT',12000,true)">Send as Gift</button>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="card">
-      <img src="images/Accessories 1.jpeg" alt="Power Bank">
-      <div class="card-body">
-        <span class="badge">New</span>
-        <h3>Power Bank 20000mAh</h3>
-        <p class="price">₦15,000</p>
-        <button class="btn" onclick="addToCart('Power Bank 20000mAh',15000)">Add to Cart</button>
-        <button class="btn" style="background:#333;color:#FFD700;margin-top:10px;" onclick="addToCart('Power Bank 20000mAh - GIFT',15000,true)">Send as Gift</button>
+
+    <!-- VIDEO SECTION -->
+    <section class="video-section" id="video"
+      style="background:#000; color:#fff; text-align:center; padding:60px 20px;">
+      <div style="max-width:1200px; margin:auto;">
+        <h2 style="font-size:34px; margin-bottom:10px; color:#FFD700;">Welcome to Bee's Gadget Hub</h2>
+        <p style="margin-bottom:30px; font-size:16px;">Watch how we keep your devices powered 24/7</p>
+
+        <div
+          style="max-width:900px; margin:auto; border-radius:20px; overflow:hidden; box-shadow:0 10px 40px rgba(255,215,0,0.3); border:3px solid #FFD700;">
+          <video width="100%" controls autoplay muted loop playsinline poster="images/video-cover.jpg">
+            <source src="videos/Woman_organizing_phone_accessories_202608181032.MP4" type="video/mp4">
+            <source src="videos/Woman_shopping_in_store_202608181033.MP4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </section>
+
+    <!-- MOBILE RESPONSIVE -->
+    <style>
+      @media(max-width:768px) {
+        .video-section {
+          padding: 40px 15px !important;
+        }
+      }
+    </style>
+
+
+    <!-- TESTIMONIALS -->
+    <div class="container">
+      <h2 class="section-title">What Customers Say</h2>
+      <div class="grid">
+        <div class="testimonial">
+          <p>"Bee's saved me during NEPA. Fast charging and very affordable. I buy all my accessories here now."</p>
+          <h5>- Akpan Daniel, Uyo</h5>
+        </div>
+        <div class="testimonial">
+          <p>"The CEO is so professional. I ordered a power bank online and it was delivered same day."</p>
+          <h5>- Aisha, Port Harcourt</h5>
+        </div>
+        <div class="testimonial">
+          <p>"Best charging center in town. 24/7 power and friendly staff. 10/10"</p>
+          <h5>- Emmanuel, Lagos</h5>
+        </div>
       </div>
     </div>
-    <div class="card">
-      <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?q=80&w=800" alt="Earphones">
-      <div class="card-body">
-        <span class="badge">Hot</span>
-        <h3>Wireless Earphones</h3>
-        <p class="price">₦12,000</p>
-        <button class="btn" onclick="addToCart('Wireless Earphones',12000)">Add to Cart</button>
-        <button class="btn" style="background:#333;color:#FFD700;margin-top:10px;" onclick="addToCart('Wireless Earphones - GIFT',12000,true)">Send as Gift</button>
+
+    <div class="container" id="book">
+      <h2 class="section-title">Book a Service</h2>
+      <form onsubmit="bookService(event)">
+        <input type="text" id="bName" placeholder="Your Name" required>
+        <input type="tel" id="bPhone" placeholder="Your Phone" required>
+        <select id="bService" required>
+          <option value="">Select Service</option>
+          <option>Phone Charging</option>
+          <option>Screen Protector Installation</option>
+          <option>Phone Repair</option>
+          <option>Accessories Purchase</option>
+        </select>
+        <input type="datetime-local" id="bDate" required>
+        <button class="btn" type="submit" style="width:100%;">Book Appointment</button>
+      </form>
+    </div>
+
+    <div class="container" id="cart">
+      <h2 class="section-title">Checkout</h2>
+      <div id="cartItems">
+        <p>Your cart is empty</p>
       </div>
+      <h3>Total: ₦<span id="total">0</span></h3>
+
+      <h4>Delivery Details</h4>
+      <input type="text" id="custName" placeholder="Full Name" required>
+      <input type="email" id="custEmail" placeholder="Email Address" required>
+      <input type="tel" id="custPhone" placeholder="Phone Number" required>
+      <textarea id="address" placeholder="Delivery Address" rows="2"></textarea>
+
+      <div id="giftBox" style="display:none;">
+        <h4>Gift Recipient Details</h4>
+        <input type="text" id="friendName" placeholder="Friend's Name">
+        <input type="tel" id="friendPhone" placeholder="Friend's Phone">
+      </div>
+
+      <button class="btn" style="width:100%;margin-top:15px;font-size:18px;" onclick="payWithPaystack()">Make
+        Payment</button>
     </div>
+
+    <footer id="contact">
+      <p>📍 28 Idak Edat street, Nwaniba Uyo, Akwa Ibom State</p>
+      <p>📞 08028571843 | ✉️ Beautyphilip016@gmail.com</p>
+      <p>©️ 2026 Bee's Gadget Hub. All Rights Reserved.</p>
+    </footer>
+
+    <a href="https://wa.me/2348103866227" class="whatsapp" target="_blank">💬</a>
   </div>
-</div>
 
-<!-- VIDEO SECTION -->
-<section class="video-section" id="video" style="background:#000; color:#fff; text-align:center; padding:60px 20px;">
-  <div style="max-width:1200px; margin:auto;">
-    <h2 style="font-size:34px; margin-bottom:10px; color:#FFD700;">Welcome to Bee's Gadget Hub</h2>
-    <p style="margin-bottom:30px; font-size:16px;">Watch how we keep your devices powered 24/7</p>
-    
-    <div style="max-width:900px; margin:auto; border-radius:20px; overflow:hidden; box-shadow:0 10px 40px rgba(255,215,0,0.3); border:3px solid #FFD700;">
-      <video 
-        width="100%" 
-        controls 
-        autoplay 
-        muted 
-        loop 
-        playsinline
-        poster="images/video-cover.jpg">
-        <source src="videos/Woman_organizing_phone_accessories_202608181032.MP4" type="video/mp4">
-        <source src="videos/Woman_shopping_in_store_202608181033.MP4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-    </div>
-  </div>
-</section>
+  <script>
+    function toggleMenu() {
+      document.getElementById('navbar').classList.toggle('show');
+    }
+    function showSignup() { document.getElementById('loginForm').style.display = 'none'; document.getElementById('signupForm').style.display = 'block'; }
+    function showLogin() { document.getElementById('signupForm').style.display = 'none'; document.getElementById('loginForm').style.display = 'block'; }
 
-<!-- MOBILE RESPONSIVE -->
-<style>
-@media(max-width:768px){
-  .video-section{padding:40px 15px !important;}
-}
-</style>
+    function signup() {
+      let user = { name: signName.value, email: signEmail.value, phone: signPhone.value, pass: signPass.value };
+      if (!user.name || !user.email) return alert('Fill all fields');
+      localStorage.setItem('beeUser', JSON.stringify(user));
+      alert('Account Created! Please login.');
+      showLogin();
+    }
 
+    function login() {
+      let user = JSON.parse(localStorage.getItem('beeUser'));
+      if (user && user.email === loginEmail.value && user.pass === loginPass.value) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('mainSite').style.display = 'block';
+        custName.value = user.name; custEmail.value = user.email; custPhone.value = user.phone;
+      } else { alert('Invalid email or password'); }
+    }
 
-<!-- TESTIMONIALS -->
-<div class="container">
-  <h2 class="section-title">What Customers Say</h2>
-  <div class="grid">
-    <div class="testimonial">
-      <p>"Bee's saved me during NEPA. Fast charging and very affordable. I buy all my accessories here now."</p>
-      <h5>- Akpan Daniel, Uyo</h5>
-    </div>
-    <div class="testimonial">
-      <p>"The CEO is so professional. I ordered a power bank online and it was delivered same day."</p>
-      <h5>- Aisha, Port Harcourt</h5>
-    </div>
-    <div class="testimonial">
-      <p>"Best charging center in town. 24/7 power and friendly staff. 10/10"</p>
-      <h5>- Emmanuel, Lagos</h5>
-    </div>
-  </div>
-</div>
+    function logout() {
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('mainSite').style.display = 'none';
+    }
 
-<div class="container" id="book">
-  <h2 class="section-title">Book a Service</h2>
-  <form onsubmit="bookService(event)">
-    <input type="text" id="bName" placeholder="Your Name" required>
-    <input type="tel" id="bPhone" placeholder="Your Phone" required>
-    <select id="bService" required>
-      <option value="">Select Service</option>
-      <option>Phone Charging</option>
-      <option>Screen Protector Installation</option>
-      <option>Phone Repair</option>
-      <option>Accessories Purchase</option>
-    </select>
-    <input type="datetime-local" id="bDate" required>
-    <button class="btn" type="submit" style="width:100%;">Book Appointment</button>
-  </form>
-</div>
-
-<div class="container" id="cart">
-  <h2 class="section-title">Checkout</h2>
-  <div id="cartItems"><p>Your cart is empty</p></div>
-  <h3>Total: ₦<span id="total">0</span></h3>
-  
-  <h4>Delivery Details</h4>
-  <input type="text" id="custName" placeholder="Full Name" required>
-  <input type="email" id="custEmail" placeholder="Email Address" required>
-  <input type="tel" id="custPhone" placeholder="Phone Number" required>
-  <textarea id="address" placeholder="Delivery Address" rows="2"></textarea>
-  
-  <div id="giftBox" style="display:none;">
-    <h4>Gift Recipient Details</h4>
-    <input type="text" id="friendName" placeholder="Friend's Name">
-    <input type="tel" id="friendPhone" placeholder="Friend's Phone">
-  </div>
-  
-  <button class="btn" style="width:100%;margin-top:15px;font-size:18px;" onclick="payWithPaystack()">Make Payment</button>
-</div>
-
-<footer id="contact">
-  <p>📍 28 Idak Edat street, Nwaniba Uyo, Akwa Ibom State</p>
-  <p>📞 08028571843 | ✉️ Beautyphilip016@gmail.com</p>
-  <p>©️ 2026 Bee's Gadget Hub. All Rights Reserved.</p>
-</footer>
-
-<a href="https://wa.me/2348103866227" class="whatsapp" target="_blank">💬</a>
-</div>
-
-<script>
-  function toggleMenu(){
-    document.getElementById('navbar').classList.toggle('show');
-  }
-  function showSignup(){document.getElementById('loginForm').style.display='none';document.getElementById('signupForm').style.display='block';}
-  function showLogin(){document.getElementById('signupForm').style.display='none';document.getElementById('loginForm').style.display='block';}
-  
-  function signup(){
-    let user = {name:signName.value, email:signEmail.value, phone:signPhone.value, pass:signPass.value};
-    if(!user.name || !user.email) return alert('Fill all fields');
-    localStorage.setItem('beeUser', JSON.stringify(user));
-    alert('Account Created! Please login.');
-    showLogin();
-  }
-  
-  function login(){
-    let user = JSON.parse(localStorage.getItem('beeUser'));
-    if(user && user.email === loginEmail.value && user.pass === loginPass.value){
-      document.getElementById('loginScreen').style.display='none';
-      document.getElementById('mainSite').style.display='block';
-      custName.value = user.name; custEmail.value = user.email; custPhone.value = user.phone;
-    }else{alert('Invalid email or password');}
-  }
-  
-  function logout(){
-    document.getElementById('loginScreen').style.display='flex';
-    document.getElementById('mainSite').style.display='none';
-  }
-
-  let cart = []; let total = 0; let isGift = false;
-  function addToCart(name, price, gift=false){
-    cart.push({name, price}); total += price; if(gift) isGift = true; updateCart();
-  }
-  function updateCart(){
-    let cartDiv = document.getElementById('cartItems');
-    cartDiv.innerHTML = '';
-    cart.forEach(item=>{
-      cartDiv.innerHTML += `<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee;">${item.name} <span>₦${item.price.toLocaleString()}</span></div>`;
-    });
-    document.getElementById('total').innerText = total.toLocaleString();
-    document.getElementById('cartCount').innerText = cart.length;
-    document.getElementById('giftBox').style.display = isGift ? 'block' : 'none';
-    if(cart.length === 0) cartDiv.innerHTML = '<p>Your cart is empty</p>';
-  }
-  function bookService(e){
-    e.preventDefault();
-    let msg = `New Booking:%0AName: ${bName.value}%0APhone: ${bPhone.value}%0AService: ${bService.value}%0ADate: ${bDate.value}`;
-    window.open(`https://wa.me/2348103866227?text=${msg}`);
-  }
-  function payWithPaystack(){
-    if(cart.length === 0){alert('Cart is empty'); return;}
-    let handler = PaystackPop.setup({
-      key: 'pk_live_0790dc5fbfbff8e46fa8193e460af1634d765d73',
-      email: custEmail.value, amount: total * 100, currency: "NGN", ref: 'BEE_'+Date.now(),
-      metadata: {custom_fields: [
-        {display_name: "Customer", variable_name: "customer", value: custName.value},
-        {display_name: "Items", variable_name: "items", value: JSON.stringify(cart)},
-        {display_name: "Gift To", variable_name: "gift", value: isGift ? friendName.value : 'No'}
-      ]},
-      callback: function(response){
-        alert('Payment Successful! Ref: '+response.reference);
-        window.location.href = "https://wa.me/2348103866227?text=Payment%20Successful.%20Ref:%20"+response.reference;
-      },
-      onClose: function(){ alert('Payment cancelled'); }
-    });
-    handler.openIframe();
-  }
-</script>
+    let cart = []; let total = 0; let isGift = false;
+    function addToCart(name, price, gift = false) {
+      cart.push({ name, price }); total += price; if (gift) isGift = true; updateCart();
+    }
+    function updateCart() {
+      let cartDiv = document.getElementById('cartItems');
+      cartDiv.innerHTML = '';
+      cart.forEach(item => {
+        cartDiv.innerHTML += `<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #eee;">${item.name} <span>₦${item.price.toLocaleString()}</span></div>`;
+      });
+      document.getElementById('total').innerText = total.toLocaleString();
+      document.getElementById('cartCount').innerText = cart.length;
+      document.getElementById('giftBox').style.display = isGift ? 'block' : 'none';
+      if (cart.length === 0) cartDiv.innerHTML = '<p>Your cart is empty</p>';
+    }
+    function bookService(e) {
+      e.preventDefault();
+      let msg = `New Booking:%0AName: ${bName.value}%0APhone: ${bPhone.value}%0AService: ${bService.value}%0ADate: ${bDate.value}`;
+      window.open(`https://wa.me/2348103866227?text=${msg}`);
+    }
+    function payWithPaystack() {
+      if (cart.length === 0) { alert('Cart is empty'); return; }
+      let handler = PaystackPop.setup({
+        key: 'pk_live_0790dc5fbfbff8e46fa8193e460af1634d765d73',
+        email: custEmail.value, amount: total * 100, currency: "NGN", ref: 'BEE_' + Date.now(),
+        metadata: {
+          custom_fields: [
+            { display_name: "Customer", variable_name: "customer", value: custName.value },
+            { display_name: "Items", variable_name: "items", value: JSON.stringify(cart) },
+            { display_name: "Gift To", variable_name: "gift", value: isGift ? friendName.value : 'No' }
+          ]
+        },
+        callback: function (response) {
+          alert('Payment Successful! Ref: ' + response.reference);
+          window.location.href = "https://wa.me/2348103866227?text=Payment%20Successful.%20Ref:%20" + response.reference;
+        },
+        onClose: function () { alert('Payment cancelled'); }
+      });
+      handler.openIframe();
+    }
+  </script>
 
 </body>
+
 </html>
